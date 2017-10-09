@@ -1,0 +1,8 @@
+---
+
+- name: Install fdio_vpp role packages
+  package:
+    name: "{{ fdio_package_list }}"
+    state: "{{ fdio_package_state }}"
+    update_cache: "{{ (ansible_pkg_mgr in ['apt', 'zypper']) | ternary('yes', omit) }}"
+    cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
