@@ -3,4 +3,5 @@
 fdio_distro_packages:
   - vpp
   - vpp-lib
-  - vpp-plugins
+
+cache_timeout: 600

@@ -1,0 +1,25 @@
+---
+
+- name: Add fdio repository
+  apt_repository:
+    repo: deb [trusted=yes] https://nexus.fd.io/content/repositories/fd.io.master.ubuntu.xenial.main/ ./
+    state: present
+    filename: 99-fdio
+- name: Install fdio_vpp role packages
+  package:
+    name: "{{ fdio_package_list }}"
+    state: "{{ fdio_package_state }}"
+    update_cache: "{{ (ansible_pkg_mgr in ['apt', 'zypper']) | ternary('yes', omit) }}"
+    cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
+- name: Configure systemd vpp service
+  copy:
+    src: files/vpp.service
+    dest: /lib/systemd/system/vpp.service
+  notify:
+    - system reload
+- name: Configure vpp
+  template:
+    src: ../templates/startup.conf.j2
+    dest: /etc/vpp/startup.conf
+  notify:
+    - restart vpp

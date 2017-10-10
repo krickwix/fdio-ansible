@@ -1,0 +1,5 @@
+---
+- name: system reload
+  systemd: daemon-reload=yes
+- name: restart vpp
+  service: name=vpp state=restarted enabled=yes
